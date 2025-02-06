@@ -6,18 +6,15 @@ This is just quick client code for up bank. Largely, created with claude code ge
 
 The openapi spec is available at https://github.com/up-banking/api/blob/master/v1/openapi.json
 
+# Ping example
 ```go
-client := upclient.NewClient("your-token-here")
-pingResp, err := client.Ping()
-if err != nil {
-    log.Fatal(err)
+func ping() {
+    client := up.NewClient("your-token-here", nil)
+    pingResp, _, err := client.Utility.Ping(context.TODO())
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("API Status: %s\n", pingResp.Meta.StatusEmoji)
 }
-fmt.Printf("API Status: %s\n", pingResp.Meta.StatusEmoji)
 ```
 
-```go
-client := up.NewClient("your-token-here", nil)
-
-// List accounts
-accounts, resp, err := client.Accounts.List(
-```
