@@ -3,7 +3,7 @@ package examples
 import (
 	"context"
 	"fmt"
-	"github.com/jordanstewart/up-client/up"
+	"github.com/jordanst3wart/up-client/up"
 	"log"
 )
 
