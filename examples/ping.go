@@ -1,13 +1,15 @@
 package examples
 
 import (
+	"context"
 	"fmt"
+	"github.com/jordanstewart/up-client/up"
 	"log"
 )
 
 func ping() {
-	client := upclient.NewClient("your-token-here")
-	pingResp, err := client.Ping()
+	client := up.NewClient("your-token-here", nil)
+	pingResp, _, err := client.Utility.Ping(context.TODO())
 	if err != nil {
 		log.Fatal(err)
 	}

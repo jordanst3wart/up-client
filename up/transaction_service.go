@@ -84,7 +84,7 @@ type TransactionRelationships struct {
 	TransferAccount *AccountRelationship  `json:"transferAccount"`
 	Category        *CategoryRelationship `json:"category"`
 	ParentCategory  *CategoryRelationship `json:"parentCategory"`
-	Tags            TagsRelationship      `json:"tags"`
+	Tags            TagRelationships      `json:"tags"`
 }
 
 type AccountRelationship struct {

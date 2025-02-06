@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"reflect"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 const (
