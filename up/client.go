@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	defaultBaseURL = "https://api.up.com.au/api/v1"
+	defaultBaseURL = "https://api.up.com.au/api/v1/"
 	userAgent      = "up-go-client/1.0"
 )
 
@@ -76,7 +76,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 		return nil, err
 	}
 
-	u := c.baseURL.ResolveReference(rel)
+	uri := c.baseURL.ResolveReference(rel)
 
 	var buf io.ReadWriter
 	if body != nil {
@@ -87,7 +87,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 		}
 	}
 
-	req, err := http.NewRequest(method, u.String(), buf)
+	req, err := http.NewRequest(method, uri.String(), buf)
 	if err != nil {
 		return nil, err
 	}
@@ -108,27 +108,27 @@ func (c *Client) do(ctx context.Context, req *http.Request, v interface{}) (*htt
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		select {
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return nil, ctx.Err()
-		default:
 		}
 		return nil, err
 	}
 
 	defer resp.Body.Close()
 
+	// probably a bug here somewhere
 	if resp.StatusCode >= 400 {
 		errorResponse := &ErrorResponse{}
-		err = json.NewDecoder(resp.Body).Decode(errorResponse)
-		if err != nil {
+		if err := json.NewDecoder(resp.Body).Decode(errorResponse); err != nil {
 			return resp, fmt.Errorf("http status %d: failed to decode error response", resp.StatusCode)
 		}
 		return resp, errorResponse
 	}
 
 	if v != nil {
-		err = json.NewDecoder(resp.Body).Decode(v)
+		if err := json.NewDecoder(resp.Body).Decode(v); err != nil {
+			return resp, err
+		}
 	}
 
 	return resp, err

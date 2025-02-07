@@ -2,6 +2,7 @@ package up
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -20,7 +21,7 @@ type PingResponse struct {
 func (s *UtilityService) Ping(ctx context.Context) (*PingResponse, *http.Response, error) {
 	req, err := s.client.newRequest("GET", "util/ping", nil)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("error creating request: %v", err)
 	}
 
 	var response PingResponse

@@ -1,3 +1,3 @@
-package examples
+package pagination
 
 // TODO Pagination example
