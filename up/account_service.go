@@ -80,13 +80,8 @@ func (s *AccountsService) List(ctx context.Context, opts *ListAccountsOptions) (
 		}
 	}
 
-	req, err := s.client.newRequest("GET", u, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var accounts AccountListResponse
-	resp, err := s.client.do(ctx, req, &accounts)
+	resp, err := s.client.paginate(ctx, u, &accounts)
 	if err != nil {
 		return nil, resp, err
 	}

@@ -134,13 +134,8 @@ func (s *TransactionsService) List(ctx context.Context, opts *ListTransactionsOp
 		}
 	}
 
-	req, err := s.client.newRequest("GET", u, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var transactions TransactionListResponse
-	resp, err := s.client.do(ctx, req, &transactions)
+	resp, err := s.client.paginate(ctx, u, &transactions)
 	if err != nil {
 		return nil, resp, err
 	}
@@ -159,13 +154,8 @@ func (s *TransactionsService) ListByAccount(ctx context.Context, accountID strin
 		}
 	}
 
-	req, err := s.client.newRequest("GET", u, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
 	var transactions TransactionListResponse
-	resp, err := s.client.do(ctx, req, &transactions)
+	resp, err := s.client.paginate(ctx, u, &transactions)
 	if err != nil {
 		return nil, resp, err
 	}

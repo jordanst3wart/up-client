@@ -197,3 +197,61 @@ type MoneyObject struct {
 	Value            string `json:"value"`
 	ValueInBaseUnits int64  `json:"valueInBaseUnits"`
 }
+
+// paginate handles pagination for any API resource that returns a list response with a Next link
+func (c *Client) paginate(ctx context.Context, initialURL string, result interface{}) (*http.Response, error) {
+	nextPageURL := initialURL
+
+	// Get the value of the result pointer
+	resultValue := reflect.ValueOf(result).Elem()
+
+	// The first iteration is special since we need to initialize the result
+	firstPage := true
+
+	for nextPageURL != "" {
+		req, err := c.newRequest("GET", nextPageURL, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		// Create a new instance of the same type as result
+		pageResult := reflect.New(resultValue.Type()).Interface()
+
+		resp, err := c.do(ctx, req, pageResult)
+		if err != nil {
+			return resp, err
+		}
+
+		// Get the value of the page result
+		pageValue := reflect.ValueOf(pageResult).Elem()
+
+		if firstPage {
+			// First page: just copy the entire result
+			resultValue.Set(pageValue)
+			firstPage = false
+		} else {
+			// Subsequent pages: append Data field contents
+			resultData := resultValue.FieldByName("Data")
+			pageData := pageValue.FieldByName("Data")
+
+			if resultData.IsValid() && pageData.IsValid() {
+				resultData.Set(reflect.AppendSlice(resultData, pageData))
+			}
+		}
+
+		// Check for a Next link
+		linksField := pageValue.FieldByName("Links")
+		if !linksField.IsValid() {
+			break
+		}
+
+		nextField := linksField.FieldByName("Next")
+		if !nextField.IsValid() || nextField.String() == "" {
+			break
+		}
+
+		nextPageURL = nextField.String()
+	}
+
+	return nil, nil
+}
