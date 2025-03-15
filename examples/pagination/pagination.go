@@ -35,5 +35,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	slog.Info("All transactions for transactions account", "transactions", list)
+	slog.Info("All transactions for transactions account", "numberOfTransacitons", len(list.Data), "transactions", list)
 }
