@@ -1,4 +1,4 @@
-### Go client for Up bank
+# Go client for Up bank
 
 This is just quick client code for up bank. Largely, created with claude code generation.
 
@@ -7,7 +7,7 @@ The openapi spec is available at https://github.com/up-banking/api/blob/master/v
 ### Usage
 Usage is described here: https://developer.up.com.au
 
-# Ping example
+### Ping example
 ```go
 func ping() {
     client := up.NewClient("your-token-here", nil)
