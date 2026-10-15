@@ -1,10 +1,11 @@
-Go client for up
-
-https://developer.up.com.au
+### Go client for Up bank
 
 This is just quick client code for up bank. Largely, created with claude code generation.
 
 The openapi spec is available at https://github.com/up-banking/api/blob/master/v1/openapi.json
+
+### Usage
+Usage is described here: https://developer.up.com.au
 
 # Ping example
 ```go
